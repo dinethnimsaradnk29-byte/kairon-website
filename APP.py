@@ -3,6 +3,10 @@ import streamlit as st
 # Page Configuration
 st.set_page_config(page_title="KAIRON Official", layout="wide")
 
+# App State එක මඟින් දැනට ඉන්න පිටුව (Page) තබා ගැනීම
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "Home"
+
 # Custom CSS for Premium Tech Dark Theme
 st.markdown("""
     <style>
@@ -13,48 +17,27 @@ st.markdown("""
         font-family: 'Inter', 'Poppins', sans-serif;
     }
     
-    /* A. Fixed Header Styles */
+    /* Header Design */
     .custom-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
         background-color: rgba(18, 18, 18, 0.95);
         border-bottom: 1px solid rgba(0, 229, 255, 0.2);
         padding: 15px 50px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 9999;
+        margin-bottom: 30px;
     }
     .header-logo {
         color: #00E5FF;
         font-size: 28px;
         font-weight: 900;
         letter-spacing: 2px;
-        text-decoration: none;
-    }
-    .header-nav a {
-        color: #FFFFFF;
-        text-decoration: none;
-        margin-left: 25px;
-        font-weight: 500;
-        transition: 0.3s;
-    }
-    .header-nav a:hover {
-        color: #00E5FF;
-        text-shadow: 0 0 10px #00E5FF;
     }
     
-    /* Padding to prevent content from hiding under fixed header */
-    .content-wrapper {
-        margin-top: 100px;
-    }
-    
-    /* B. Hero Section Styles */
+    /* Hero Section Styles */
     .hero-container {
         text-align: center;
-        padding: 80px 20px;
+        padding: 60px 20px;
     }
     .hero-title {
         color: #00E5FF;
@@ -71,33 +54,11 @@ st.markdown("""
         line-height: 1.6;
     }
     
-    /* Custom Neon Button */
-    .hero-btn {
-        background-color: #00E5FF;
-        color: #121212;
-        border: none;
-        padding: 14px 35px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: 0.3s;
-        box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-        text-decoration: none;
-        display: inline-block;
-    }
-    .hero-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 0 25px #00E5FF;
-        color: #121212;
-    }
-    
     /* Section Headers */
     .section-title {
         color: #00E5FF;
         font-size: 32px;
         font-weight: 700;
-        margin-top: 50px;
         margin-bottom: 20px;
         border-left: 4px solid #00E5FF;
         padding-left: 15px;
@@ -110,13 +71,12 @@ st.markdown("""
         line-height: 1.7;
     }
     
-    /* D. Brand Feature Card */
+    /* Brand Feature Card */
     .brand-card {
         background: linear-gradient(145deg, #1a1a1a, #222222);
         border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 12px;
         padding: 30px;
-        margin-top: 20px;
         transition: 0.3s;
     }
     .brand-card:hover {
@@ -139,46 +99,66 @@ st.markdown("""
         display: inline-block;
         margin-top: 15px;
     }
+    
+    /* Product Card Styles */
+    .product-card {
+        background-color: #1A1A1A;
+        border: 1px solid #222;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .product-price {
+        color: #00E5FF;
+        font-size: 20px;
+        font-weight: bold;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 # ==========================================
-# A. HEADER & NAVIGATION (Fixed at Top)
+# HEADER & NAVIGATION SYSTEM
 # ==========================================
-st.markdown("""
-    <div class="custom-header">
-        <a href="#" class="header-logo">KAIRON</a>
-        <div class="header-nav">
-            <a href="#">Home</a>
-            <a href="#">Our Studios</a>
-            <a href="#">Contact</a>
+# Streamlit වල බොත්තම් උඩින්ම තියන්න Columns පාවිච්චි කිරීම
+head_col1, head_col2, head_col3, head_col4, head_col5 = st.columns([2, 1, 1, 1, 1])
+
+with head_col1:
+    st.markdown('<div class="header-logo">KAIRON</div>', unsafe_allow_html=True)
+with head_col2:
+    if st.button("🏠 Home", use_container_width=True):
+        st.session_state.current_page = "Home"
+with head_col3:
+    if st.button("🏢 About", use_container_width=True):
+        st.session_state.current_page = "About"
+with head_col4:
+    if st.button("🎮 Studios", use_container_width=True):
+        st.session_state.current_page = "Studios"
+with head_col5:
+    if st.button("🛒 Shop (Daraz)", use_container_width=True):
+        st.session_state.current_page = "Shop"
+
+st.markdown("<hr style='border-color: rgba(0,229,255,0.2); margin-top:0;'>", unsafe_allow_html=True)
+
+# ==========================================
+# PAGE CONTENT CONTROLLER
+# ==========================================
+
+# 1. HOME PAGE
+if st.session_state.current_page == "Home":
+    st.markdown("""
+        <div class="hero-container">
+            <h1 class="hero-title">KAIRON: The Future of Tech & Innovation</h1>
+            <p class="hero-subtitle">We build high-performance digital experiences, interactive media, and next-generation software solutions.</p>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
+    
+    if st.button("Explore Our Shop Now 🚀"):
+        st.session_state.current_page = "Shop"
+        st.rerun()
 
-# Start Content Wrapper (to push content below fixed header)
-st.markdown('<div class="content-wrapper">', unsafe_allow_html=True)
-
-# ==========================================
-# B. HERO SECTION (Main Banner)
-# ==========================================
-st.markdown("""
-    <div class="hero-container">
-        <h1 class="hero-title">KAIRON: The Future of Tech & Innovation</h1>
-        <p class="hero-subtitle">We build high-performance digital experiences, interactive media, and next-generation software solutions.</p>
-        <a href="#" class="hero-btn">Explore Our Work</a>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.write("---")
-
-# Layout adjustments for Content
-col_left, col_right = st.columns([2, 1.5])
-
-with col_left:
-    # ==========================================
-    # C. ABOUT KAIRON
-    # ==========================================
+# 2. ABOUT PAGE
+elif st.session_state.current_page == "About":
     st.markdown('<h2 class="section-title">Who We Are</h2>', unsafe_allow_html=True)
     st.markdown("""
         <p class="desc-text">
@@ -187,10 +167,8 @@ with col_left:
         </p>
         """, unsafe_allow_html=True)
 
-with col_right:
-    # ==========================================
-    # D. OUR ECOSYSTEM / BRANDS (Card Design)
-    # ==========================================
+# 3. STUDIOS PAGE
+elif st.session_state.current_page == "Studios":
     st.markdown('<h2 class="section-title">Our Ecosystem</h2>', unsafe_allow_html=True)
     st.markdown("""
         <div class="brand-card">
@@ -202,5 +180,42 @@ with col_right:
         </div>
         """, unsafe_allow_html=True)
 
-# Close Content Wrapper
-st.markdown('</div>', unsafe_allow_html=True)
+# 4. SHOP PAGE (Daraz වගේ විකුණන බඩු දාන තැන)
+elif st.session_state.current_page == "Shop":
+    st.markdown('<h2 class="section-title">KAIRON Marketplace</h2>', unsafe_allow_html=True)
+    st.write("Daraz වගේ අපේ බඩු විකුණන්න තියෙන නිල Marketplace එක මෙන්න:")
+    
+    shop_col1, shop_col2, shop_col3 = st.columns(3)
+    
+    with shop_col1:
+        st.markdown("""
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" width="100%">
+                <h3 style='color:white;'>KAIRON Speed Sneakers</h3>
+                <p class="product-price">රු. 15,000</p>
+            </div>
+            """, unsafe_allow_html=True)
+        if st.button("Buy Now", key="p1"):
+            st.success("Added to Cart!")
+            
+    with shop_col2:
+        st.markdown("""
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e" width="100%">
+                <h3 style='color:white;'>KAIRON Cyber Audio V2</h3>
+                <p class="product-price">රු 22,500</p>
+            </div>
+            """, unsafe_allow_html=True)
+        if st.button("Buy Now", key="p2"):
+            st.success("Added to Cart!")
+            
+    with shop_col3:
+        st.markdown("""
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30" width="100%">
+                <h3 style='color:white;'>KAIRON Smart Watch X</h3>
+                <p class="product-price">රු. 18,900</p>
+            </div>
+            """, unsafe_allow_html=True)
+        if st.button("Buy Now", key="p3"):
+            st.success("Added to Cart!")
