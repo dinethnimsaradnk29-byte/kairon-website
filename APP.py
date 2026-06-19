@@ -44,7 +44,7 @@ st.markdown(f"""
         box-shadow: 0 0 15px #00E5FF;
     }}
     </style>
-    """, unsafe_allow_index=True)
+    """, unsafe_allow_html=True)
 
 # 2. UI Layout එක නිර්මාණය කිරීම
 st.markdown('<p class="neon-title">KAIRON</p>', unsafe_allow_html=True)
